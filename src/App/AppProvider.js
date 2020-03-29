@@ -7,13 +7,32 @@ export class AppProvider extends React.Component {
     super(props);
     this.state = {
       page: 'dashboard',
-      setPage: this.setPage
+      ...this.savedSettings(),
+      setPage: this.setPage,
+      confirmFavorites: this.confirmFavorites
     }
   }
 
-  setPage = page => this.setState({page})
+  confirmFavorites = () => {
+    this.setState({
+      firstVisit: false,
+      page: 'dashboard'
+    })
+    localStorage.setItem('cryptoReact', JSON.stringify({
+      test: 'hello'
+    }))
+  }
 
-  render() {
+  savedSettings () {
+    let cryptoReactData = JSON.parse(localStorage.getItem('cryptoReact'))
+    if (!cryptoReactData) {
+      return { page: 'settings', firstVisit: true }
+    }
+  }
+
+  setPage = page => this.setState({ page })
+
+  render () {
     return (
       <AppContext.Provider value={this.state}>
         {this.props.children}
